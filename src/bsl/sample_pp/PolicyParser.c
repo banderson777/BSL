@@ -1,3 +1,4 @@
+/* Local integration modifications (banderson777, 2026); see LOCAL_CHANGES.md. */
 /*
  * Copyright (c) 2025-2026 The Johns Hopkins University Applied Physics
  * Laboratory LLC.
@@ -320,7 +321,11 @@ static int BSLP_PolicyOptions_SC3(BSLB_VariantPtrMap_t options, const char *id_s
             for (size_t item_ix = 0; val_it; ++item_ix)
             {
                 int64_t blk_num;
-                if (BSLP_GetTextAsInt(&blk_num, json_object_iter_key(val_it), json_object_iter_key_len(val_it)))
+                /* jansson <= 2.13 does not provide json_object_iter_key_len().
+                 * The iterator key is a NUL-terminated JSON string, so strlen
+                 * is equivalent and keeps the BSL build portable. */
+                const char *key = json_object_iter_key(val_it);
+                if (BSLP_GetTextAsInt(&blk_num, key, strlen(key)))
                 {
                     BSL_LOG_ERR("AAD Scope invalid map key");
                     BSL_free(scope);
