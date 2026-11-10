@@ -272,8 +272,10 @@ static int BSLP_PolicyOptions_SC2(BSLB_VariantPtrMap_t options, const char *id_s
     return BSL_SUCCESS;
 }
 
-/** Handle options for Security context ID 3.
- * Matches ::BSLP_OptionHandler_f signature.
+/** Convert one JSON option for security context ID 3 into the policy map.
+ * The caller supplies the option name and JSON value; null removes an option.
+ * Validate key IDs and AAD scope entries before storing their typed values.
+ * Matches ::BSLP_OptionHandler_f; return a policy error for unsupported values.
  */
 static int BSLP_PolicyOptions_SC3(BSLB_VariantPtrMap_t options, const char *id_str, json_t *value) // NOSONAR
 {
